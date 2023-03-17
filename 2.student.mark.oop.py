@@ -28,16 +28,16 @@ class Uni:
             number_student = int(input("Please enter a number bigger than 0: "))
         print("There are " + str(number_student) + " students in the class \n" )
         for i in range(1, number_student + 1):
-            student_name = input("Enter student " + str(i) + "'u name: ")
-            student_id = input("Enter student " + str(i) + "'u ID: ")
-            student_DoB = input("Enter student " + str(i) + "'u DoB: ")
+            student_name = input("Enter student " + str(i) + "'s name: ")
+            student_id = input("Enter student " + str(i) + "'s ID: ")
+            student_DoB = input("Enter student " + str(i) + "'s DoB: ")
             print("\n")          
             student = i
             self.__student_info[student] = {"name": student_name, "ID": student_id, "DoB": student_DoB}
 
     def list_student(self):
         for i in self.__student_info:
-            print("Student " + str(i) + "'u information: ")
+            print("Student " + str(i) + "'s information: ")
             print(f" Name: {self.__student_info[i]['name']} \n ID: {self.__student_info[i]['ID']} \n DoB: {self.__student_info[i]['DoB']} \n")
 
     def input_course(self):
@@ -46,15 +46,15 @@ class Uni:
             number_course = int(input("Please enter a number bigger than 0: "))
         print("There are " + str(number_course) + " courses that students attend \n")
         for i in range(1, number_course + 1):
-            course_name = input("Enter course " + str(i) + "'u name: ")
-            course_id = input("Enter course " + str(i) + "'u ID: ")
+            course_name = input("Enter course " + str(i) + "'s name: ")
+            course_id = input("Enter course " + str(i) + "'s ID: ")
             print("\n")
             course = i
             self.__course_info[course] = {"name": course_name, "ID": course_id}
 
     def list_course(self):
         for i in self.__course_info:
-            print("Course " + str(i) + "'u information: ")
+            print("Course " + str(i) + "'s information: ")
             print(f" Name: {self.__course_info[i]['name']} \n ID: {self.__course_info[i]['ID']} \n")
 
     # function display courses with their corresponding number 
@@ -63,7 +63,7 @@ class Uni:
             print("Course number " + str(i) + ": " f"{self.__course_info[i]['name']}")
 
     def input_mark(self):
-        course = int(input("Enter the course'u number to choose: "))
+        course = int(input("Enter the course's number to choose: "))
         if course not in self.__course_info:
             print("Please enter the right course number.")
             return
@@ -75,13 +75,13 @@ class Uni:
         print("\n")
 
     def display_mark(self):
-        course = int(input("Enter the course'u number to choose: "))
+        course = int(input("Enter the course's number to choose: "))
         if course not in self.__course_info:
             print("Please enter the right course number.")
             return
         for student in self.__student_info:
             if student in self.__mark_info and course in self.__mark_info[student]:
-                print(f"{self.__student_info[student]['name']}'u mark in the course {self.__course_info[course]['name']} is: {self.__mark_info[student][course]}")
+                print(f"{self.__student_info[student]['name']}'s mark in the course {self.__course_info[course]['name']} is: {self.__mark_info[student][course]}")
             else:
                 print(f"Students in {self.__course_info[course]['name']} course haven't been graded.")
                 break
