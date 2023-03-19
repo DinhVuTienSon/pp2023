@@ -1,3 +1,4 @@
+import curses
 import math
 import numpy as np
 
@@ -55,9 +56,27 @@ class Uni:
             self.__student_info[student] = {"name": student_name, "ID": student_id, "DoB": student_DoB}
 
     def list_student(self):
+        stdscr = curses.initscr()
+        curses.start_color()
+        curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)        
+        curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)       
+        curses.init_pair(5, curses.COLOR_RED, curses.COLOR_BLACK)
+        green = curses.color_pair(1)
+        cyan = curses.color_pair(3)
+        red = curses.color_pair(5)
+        stdscr.clear()
+        stdscr.addstr(2, 45, "[ List of students ]", curses.A_BOLD | green)
+        line = 3
         for i in self.__student_info:
-            print("Student " + str(i) + "'s information: ")
-            print(f" Name: {self.__student_info[i]['name']} \n ID: {self.__student_info[i]['ID']} \n DoB: {self.__student_info[i]['DoB']} \n")
+            stdscr.addstr(line + 1, 3, "--> Student " + str(i) + "'s information: ", cyan)
+            stdscr.addstr(line + 2, 7, f"+) Name: {self.__student_info[i]['name']}")
+            stdscr.addstr(line + 3, 7, f"+) ID: {self.__student_info[i]['ID']}")
+            stdscr.addstr(line + 4, 7, f"+) DoB: {self.__student_info[i]['DoB']}")
+            line = line + 5
+        stdscr.refresh()
+        stdscr.addstr(line + 1, 42, "Press any key to continue!", curses.A_BOLD | red)
+        stdscr.getch()
+        curses.endwin()
 
     def input_course(self):
         while True:
@@ -91,17 +110,43 @@ class Uni:
             self.__course_info[course] = {"name": course_name, "ID": course_id, "credit": course_credit}
 
     def list_course(self):
+        stdscr = curses.initscr()
+        curses.start_color()
+        curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
+        curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
+        curses.init_pair(5, curses.COLOR_RED, curses.COLOR_BLACK)
+        green = curses.color_pair(1)
+        cyan = curses.color_pair(3)
+        red = curses.color_pair(5)
+        stdscr.clear()
+        stdscr.addstr(2, 45, "[ List of courses ]", curses.A_BOLD | green)
+        line = 3
         for i in self.__course_info:
-            print("Course " + str(i) + "'s information: ")
-            print(f" Name: {self.__course_info[i]['name']} \n ID: {self.__course_info[i]['ID']} \n Credit: {self.__course_info[i]['credit']} \n")
-
+            stdscr.addstr(line + 1, 3, "--> Course " + str(i) + "'s information: ", cyan)
+            stdscr.addstr(line + 2, 7, f"+) Name: {self.__course_info[i]['name']}")
+            stdscr.addstr(line + 3, 7, f"+) ID: {self.__course_info[i]['ID']}")
+            stdscr.addstr(line + 4, 7, f"+) Credit: {self.__course_info[i]['credit']}")
+            line = line + 5
+        stdscr.refresh()
+        stdscr.addstr(line + 1, 42, "Press any key to continue!", curses.A_BOLD | red)
+        stdscr.getch()
+        curses.endwin()
+        
     # function display courses with their corresponding number 
     def course_number(self):
         for i in self.__course_info:
             print("Course number " + str(i) + ": " f"{self.__course_info[i]['name']}")
 
     def input_mark(self):
-        course = int(input("Enter the course's number to choose: "))
+        while True:
+            try:
+                course = int(input("Enter the course's number to choose: "))
+                if course <= 0:
+                    print("Please enter a number bigger than 0.")
+                else:
+                    break
+            except ValueError:
+                print("Please enter an integer.")
         if course not in self.__course_info:
             print("Please enter the right course number.")
             return
@@ -113,17 +158,39 @@ class Uni:
         print("\n")
 
     def display_mark(self):
-        course = int(input("Enter the course's number to choose: "))
+        while True:
+            try:
+                course = int(input("Enter the course's number to choose: "))
+                if course <= 0:
+                    print("Please enter a number bigger than 0.")
+                else:
+                    break
+            except ValueError:
+                print("Please enter an integer.")
         if course not in self.__course_info:
             print("Please enter the right course number.")
             return
+        stdscr = curses.initscr()
+        curses.start_color()
+        curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
+        curses.init_pair(5, curses.COLOR_RED, curses.COLOR_BLACK)
+        green = curses.color_pair(1)
+        red = curses.color_pair(5)
+        stdscr.clear()
+        stdscr.addstr(2, 45, "[ List of student's marks ]", curses.A_BOLD | green)
+        line = 3
         for student in self.__student_info:
             if student in self.__mark_info and course in self.__mark_info[student]:
-                print(f"{self.__student_info[student]['name']}'s mark in the course {self.__course_info[course]['name']} is: {self.__mark_info[student][course]['mark']}")
+                stdscr.addstr(line + 1, 3, f"--> {self.__student_info[student]['name']}'s mark in the course {self.__course_info[course]['name']} is: {self.__mark_info[student][course]['mark']}")
+                line = line + 2
             else:
-                print(f"Students in {self.__course_info[course]['name']} course haven't been graded.")
+                stdscr.addstr(line + 1, 3, f"Students in {self.__course_info[course]['name']} course haven't been graded.")
+                line = line + 2
                 break
-        print("\n")
+        stdscr.refresh()
+        stdscr.addstr(line + 1, 45, "Press any key to continue!", curses.A_BOLD | red)
+        stdscr.getch()
+        curses.endwin()
 
     def display_gpa(self):
         total_credit = 0
@@ -133,6 +200,18 @@ class Uni:
             for course in self.__course_info:
                 total_credit += self.__course_info[course]['credit']
             break
+        
+        stdscr = curses.initscr()
+        curses.start_color()
+        curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
+        curses.init_pair(4, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+        curses.init_pair(5, curses.COLOR_RED, curses.COLOR_BLACK)
+        green = curses.color_pair(1)
+        yellow = curses.color_pair(4)
+        red = curses.color_pair(5)
+        stdscr.clear()
+        stdscr.addstr(2, 45, "[ List of student's GPA ]", curses.A_BOLD | green)
+        line = 3
 
         for student in self.__student_info:
             for course in self.__course_info:
@@ -142,25 +221,43 @@ class Uni:
                         total_quality_point += self.__mark_info[student][course]['mark'] * self.__course_info[course]['credit']
                         i = 1
                     except:
-                        print("Some courses may not have been graded yet.\nPlease choose option 3 to grade all the courses and then try again.\n")
+                        stdscr.addstr(line + 1, 3, "Some courses may not have been graded yet.")
+                        stdscr.addstr(line + 2, 3, "Please choose option 3 to grade all the courses and then try again.")
+                        line = line + 3
                     break
             if i == 1:
-                print(f"Total credit of the courses that {self.__student_info[student]['name']} attended: {total_credit} credits")
-                print(f"{self.__student_info[student]['name']}'s total quality points: {math.floor(total_quality_point * 10) / 10}")
-                print(f"{self.__student_info[student]['name']}'s gpa is: {math.floor(float(total_quality_point / total_credit) * 10) / 10}\n")
+                stdscr.addstr(line + 1, 3, "+)", yellow)
+                stdscr.addstr(line + 2, 7, f"Total credit of the courses that {self.__student_info[student]['name']} attended: {total_credit} credits")
+                stdscr.addstr(line + 3, 7,f"{self.__student_info[student]['name']}'s total quality points: {math.floor(total_quality_point * 10) / 10}")
+                stdscr.addstr(line + 4, 7,f"{self.__student_info[student]['name']}'s gpa is: {math.floor(float(total_quality_point / total_credit) * 10) / 10}\n")
                 self.__gpa_info[self.__student_info[student]['name']] = {'GPA': math.floor(float(total_quality_point / total_credit) * 10) / 10}
                 total_quality_point = 0
+                line = line + 5
             else:
-                break 
-        item = self.__gpa_info.items()
-        create_list = list(item)
-        np_array = np.array(create_list)
-    
+                break
+        stdscr.refresh()
+        stdscr.addstr(line + 1, 45, "Press any key to continue!", curses.A_BOLD | red)
+        stdscr.getch()
+        curses.endwin() 
+        
     def sort_gpa_descend(self):
         sort_gpa = sorted(self.__gpa_info.items(), key=lambda v:v[1]['GPA'], reverse= True)
-        print("Student list sorted by GPA descending:\n")
+        stdscr = curses.initscr()
+        curses.start_color()
+        curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
+        curses.init_pair(5, curses.COLOR_RED, curses.COLOR_BLACK)
+        green = curses.color_pair(1)
+        red = curses.color_pair(5)
+        stdscr.clear()
+        stdscr.addstr(2, 45, "[ Student list sorted by GPA descending ]", curses.A_BOLD | green)
+        line = 3
         for sort in sort_gpa:
-            print(sort)
+            string = '\n'.join([str(value) for value in sort_gpa])
+            stdscr.addstr(line + 1, 0, f"{string}")
+        stdscr.refresh()
+        stdscr.addstr(line + len(sort_gpa) + 2, 53, "Press any key to continue!", curses.A_BOLD | red)
+        stdscr.getch()
+        curses.endwin() 
 
 # child class Students
 class Students(Uni):
@@ -223,5 +320,6 @@ while True:
     elif option == "7":
         break
     else:
-        print("Choose only from option 1 to option 5. Please try again!")
+        print("Choose only from option 1 to option 7. Please try again!")
         print("\n") 
+
